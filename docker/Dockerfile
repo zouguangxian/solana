@@ -3,6 +3,7 @@ FROM --platform=$BUILDPLATFORM rust:1.64.0-bullseye AS builder
 ARG BUILDPLATFORM
 ARG TARGETPLATFORM
 ARG TARGETARCH
+ARG CI_COMMIT
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates vim-tiny curl git pkg-config llvm clang make
