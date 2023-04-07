@@ -5,6 +5,8 @@ ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG CI_COMMIT
 
+WORKDIR /srv/solana
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates vim-tiny curl git pkg-config llvm clang make
 
@@ -21,9 +23,10 @@ RUN ARCHITECTURE=$(echo ${TARGETARCH} | sed -e 's/arm64/aarch64/g' -e 's/amd64/x
     && rustup target add $ARCHITECTURE-unknown-linux-gnu \
     && rustup toolchain install --force-non-host stable-$ARCHITECTURE-unknown-linux-gnu
 
-RUN git clone https://github.com/solana-labs/solana.git /srv/solana
+COPY --link . /srv/solana/
 
 RUN cd /srv/solana \
+    && CI_COMMIT=$(git rev-parse --short=8 HEAD) \
     && ARCHITECTURE=$(echo ${TARGETARCH} | sed -e 's/arm64/aarch64/g' -e 's/amd64/x86_64/g') \
     && rustup target add $ARCHITECTURE-unknown-linux-gnu \
     && TARGET=$ARCHITECTURE-unknown-linux-gnu \
