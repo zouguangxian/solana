@@ -30,7 +30,8 @@ RUN cd /srv/solana \
     && ARCHITECTURE=$(echo ${TARGETARCH} | sed -e 's/arm64/aarch64/g' -e 's/amd64/x86_64/g') \
     && TARGET=$ARCHITECTURE-unknown-linux-gnu \
     && rust_stable=$(bash -c ". /srv/solana/ci/rust-version.sh; printenv | sed -n 's/^rust_stable=//p'") \
-    && PKG_CONFIG_PATH="/usr/lib/$ARCHITECTURE-linux-gnu/pkgconfig/" PKG_CONFIG_ALLOW_CROSS=1 CARGO_ENCODED_RUSTFLAGS="-Clinker=$ARCHITECTURE-linux-gnu-gcc$(printf '\037')-Cstrip=symbols$(printf '\037')--cfg=tokio_unstable" CARGO_NET_GIT_FETCH_WITH_CLI=true cargo +$rust_stable build --target=$TARGET --release
+    && TARGET_CPU=$(if [ "$BUILDPLATFORM" = "$TARGETPLATFORM" ]; then echo 'native'; else echo ${TARGETARCH} | sed -e 's/arm64/aarch64/g' -e 's/amd64/x86-64/g'; fi) \
+    && PKG_CONFIG_PATH="/usr/lib/$ARCHITECTURE-linux-gnu/pkgconfig/" PKG_CONFIG_ALLOW_CROSS=1 CARGO_ENCODED_RUSTFLAGS="-Clinker=$ARCHITECTURE-linux-gnu-gcc$(printf '\037')-Cstrip=symbols$(printf '\037')--cfg=tokio_unstable$(printf '\037')-Ctarget-cpu=$TARGET_CPU" CARGO_NET_GIT_FETCH_WITH_CLI=true cargo +$rust_stable build --target=$TARGET --release
 
 RUN mkdir /dist/ \
     && ARCHITECTURE=$(echo ${TARGETARCH} | sed -e 's/arm64/aarch64/g' -e 's/amd64/x86_64/g') \
