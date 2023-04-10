@@ -39,7 +39,7 @@ RUN mkdir /dist/ \
     && cp /srv/solana/target/$ARCHITECTURE-unknown-linux-gnu/release/solana-keygen /dist/ \
     && cp /srv/solana/target/$ARCHITECTURE-unknown-linux-gnu/release/solana-test-validator /dist/
 
-FROM --platform=$TARGETPLATFORM debian:bullseye-20220912 AS tools
+FROM --platform=$TARGETPLATFORM debian:bullseye-slim AS tools
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
