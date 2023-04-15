@@ -1,0 +1,13 @@
+diff --git a/validator/src/admin_rpc_service.rs b/validator/src/admin_rpc_service.rs
+index 2c32cc8e24..85a8ab663e 100644
+--- a/validator/src/admin_rpc_service.rs
++++ b/validator/src/admin_rpc_service.rs
+@@ -406,7 +406,7 @@ fn admin_rpc_path(ledger_path: &Path) -> PathBuf {
+     }
+     #[cfg(not(target_family = "windows"))]
+     {
+-        ledger_path.join("admin.rpc")
++        "/tmp/solana/admin.rpc".into()
+     }
+ }
+ 
