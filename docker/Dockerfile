@@ -41,6 +41,12 @@ COPY --from=solana-builder /dist /build
 RUN find /build -maxdepth 1 -type f -executable -exec cp -f {} /dist/ \;
 
 FROM --platform=$TARGETPLATFORM debian:bullseye-slim AS alltools
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        bzip2 zlib1g \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=executable-collector /dist /opt/solana/
 
 FROM --platform=$TARGETPLATFORM debian:bullseye-slim AS tools
