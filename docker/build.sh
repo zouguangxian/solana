@@ -3,7 +3,7 @@
 REPOSITORY=${REPOSITORY:-"docker.io/zouguangxian/solana"}
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
-echo "target/" >> ${DIR}/.dockerignore \
+printf "target/\n.dockerignore" > ${DIR}/../.dockerignore \
 && docker buildx build \
     --progress=plain \
     --platform=linux/amd64,linux/arm64 \
@@ -16,5 +16,5 @@ echo "target/" >> ${DIR}/.dockerignore \
     --build-arg CI_COMMIT=$(git rev-parse --short=8 HEAD) \
     --target tools \
     --tag ${REPOSITORY}:$(git describe --abbrev=0 --tags) \
-    -f docker/Dockerfile . --push
+    -f ${DIR}/Dockerfile ${DIR}/.. --push
 
