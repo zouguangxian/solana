@@ -14,7 +14,7 @@ printf "target/\n.dockerignore" > ${DIR}/../.dockerignore \
     --build-arg GIT_CREDENTIALS="${GIT_CREDENTIALS:-}" \
     --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
     --build-arg CI_COMMIT=$(git rev-parse --short=8 HEAD) \
-    --target tools \
-    --tag ${REPOSITORY}:$(git describe --abbrev=0 --tags) \
+    --target alltools \
+    --tag ${REPOSITORY}:alltools-$(git describe --abbrev=0 --tags) \
     -f ${DIR}/Dockerfile ${DIR}/.. --push
 
