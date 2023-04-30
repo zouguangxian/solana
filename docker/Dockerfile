@@ -39,14 +39,6 @@ RUN mkdir /dist/ \
     && cp /srv/solana/target/$ARCHITECTURE-unknown-linux-gnu/release/solana-keygen /dist/ \
     && cp /srv/solana/target/$ARCHITECTURE-unknown-linux-gnu/release/solana-test-validator /dist/
 
-FROM --platform=$BUILDPLATFORM rust:1.64.0-bullseye as anchor-builder
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends pkg-config build-essential libudev-dev libssl-dev
-
-RUN cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
-
-RUN avm install 0.27.0 && avm use 0.27.0
-
 FROM --platform=$TARGETPLATFORM debian:bullseye-slim AS tools
 
 RUN apt-get update \
@@ -55,5 +47,3 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=solana-builder /dist/ /usr/local/bin/
-COPY --from=anchor-builder /usr/local/cargo/bin/anchor /usr/local/bin/
-
