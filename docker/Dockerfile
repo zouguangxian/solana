@@ -38,6 +38,7 @@ RUN ARCHITECTURE=$(echo ${TARGETARCH} | sed -e 's/arm64/aarch64/g' -e 's/amd64/x
 
 FROM --platform=$TARGETPLATFORM debian:bullseye-slim AS executable-collector
 COPY --from=solana-builder /dist /build
+RUN mkdir -p /dist/
 RUN find /build -maxdepth 1 -type f -executable -exec cp -f {} /dist/ \;
 
 FROM --platform=$TARGETPLATFORM debian:bullseye-slim AS alltools
